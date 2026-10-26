@@ -1,0 +1,96 @@
+
+"use client";
+
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+
+export default function HeroContent() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      // Animation nur bei erlaubter Bewegung.
+      const mm = gsap.matchMedia();
+
+      mm.add(
+        "(prefers-reduced-motion: no-preference)",
+        () => {
+          // Überschriften werden elegant enthüllt.
+          gsap.from(".hero-line", {
+            yPercent: 105,
+            duration: 1.4,
+            stagger: 0.16,
+            ease: "power4.out",
+          });
+
+          // Kleinere Elemente erscheinen zeitversetzt.
+          gsap.from(".hero-detail", {
+            opacity: 0,
+            y: 24,
+            duration: 1.1,
+            delay: 0.65,
+            stagger: 0.12,
+            ease: "power3.out",
+          });
+        }
+      );
+
+      return () => mm.revert();
+    },
+    { scope: containerRef }
+  );
+
+  return (
+    <div ref={containerRef} className="w-full">
+      {/* Obere Informationen */}
+      <div className="hero-detail mb-14 flex flex-wrap items-center justify-between gap-4 text-[10px] font-medium uppercase tracking-[0.25em] text-[#9A9A96] md:mb-20">
+        <span>Independent Digital Studio</span>
+        <span>Design & Development — 2026</span>
+      </div>
+
+      {/* Hauptüberschrift */}
+      <h1 className="w-full font-extrabold uppercase leading-[0.92] tracking-[-0.085em]">
+        <span className="block overflow-hidden">
+          <span className="hero-line block text-[clamp(4.2rem,11.5vw,12rem)]">
+            Digital.
+          </span>
+        </span>
+
+        <span className="block overflow-hidden">
+          <span className="hero-line block whitespace-nowrap text-[clamp(2.25rem,8.1vw,9rem)]">
+            But Different.
+          </span>
+        </span>
+      </h1>
+
+      {/* Unterer Hero-Bereich */}
+      <div className="hero-detail mt-16 flex flex-col justify-between gap-10 border-t border-white/20 pt-8 md:mt-24 md:flex-row md:items-end">
+        <p className="max-w-md text-base leading-relaxed text-[#9A9A96] md:text-lg">
+          Ich entwickle digitale Auftritte, die durch
+          außergewöhnliches Design, klare Strukturen
+          und moderne Technologie überzeugen.
+        </p>
+
+        <a
+          href="#kontakt"
+          className="group flex items-center gap-6 self-start text-xs font-medium uppercase tracking-[0.2em]"
+        >
+          Projekt starten
+          <span
+            aria-hidden="true"
+            className="flex h-16 w-16 items-center justify-center rounded-full border border-white/40 text-2xl transition-all duration-500 group-hover:rotate-45 group-hover:bg-[#F2F0EA] group-hover:text-[#080808]"
+          >
+            ↗
+          </span>
+        </a>
+      </div>
+
+      {/* Untere Scroll-Markierung */}
+      <div className="hero-detail mt-24 flex items-center justify-between text-[10px] uppercase tracking-[0.25em] text-[#777777]">
+        <span>Scroll to explore</span>
+        <span>01 / 04</span>
+      </div>
+    </div>
+  );
+}
